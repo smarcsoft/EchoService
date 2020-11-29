@@ -135,7 +135,7 @@
                     <archive>
                     <manifest>
                         <mainClass>
-                            com.smarcsoft.HelloWorldServer
+                            com.smarcsoft.EchoServer
                         </mainClass>
                     </manifest>
                     </archive>
