@@ -1,6 +1,3 @@
-To start the service: docker-compose up
+To start the client (and the service if the service is not running): run "docker-compose up" from the client repository
+To start the server only, run "docker-compose up" from the server repository.
 
-
-TODO:
-I need to start creating a container for the client of the server.
-Then i want to create the docker-compose with the client mentioning a dependency on the server.
