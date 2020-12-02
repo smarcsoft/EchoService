@@ -4,11 +4,12 @@ services:
   echo:
     image: echoservice:latest
     ports:
-      - "50051:50051"
-    hostname: echoserver
-    container_name: echoserver
+      - "50051"
     networks:
-      - app-net
+      app-net:
+        aliases:
+          - echoserver
+
 
   echoclient:
     image: echoclient:latest
