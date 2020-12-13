@@ -96,6 +96,7 @@ public class EchoServer
     public void say(com.smarcsoft.HelloRequest request,
         io.grpc.stub.StreamObserver<com.smarcsoft.HelloReply> responseObserver)
     {
+      logger.log(Level.INFO, "Service request " + request.getName());
       HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
