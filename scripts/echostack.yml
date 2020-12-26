@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  echo:
+    image: sebmarc/echoservice:1.01
+    ports:
+      - 50051
+networks:
+  echonet:
+    driver: overlay
+    attachable: true
