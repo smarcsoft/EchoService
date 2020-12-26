@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  echoserver:
+    image: sebmarc/echoservice:1.01
+    ports:
+      - 50051
+    deploy:
+      replicas: 2
+    networks:
+    - echonet
+
+
+networks:
+  echonet:
+    external: true

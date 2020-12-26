@@ -5,8 +5,12 @@
 . connect_worker1.sh is used to connect to the runworker number 2
 
 
-On the manager:
----------------
+To run the service on the manager:
+----------------------------------
+runservice.sh
+
+
+If i want to run the service manually on the manager (without using docker swarm):
 If not already done, enter swarm mode
 swam init
 
@@ -23,6 +27,6 @@ docker swarm join ...
 
 To run the client:
 ------------------
-docker container run --network echo-net sebmarc/echoclient:1.0
+runclient.sh
 
 
