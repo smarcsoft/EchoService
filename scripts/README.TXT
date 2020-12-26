@@ -1,7 +1,8 @@
 . setup.sh should only be ran once. It sets up the connection keys
 . connect_buildserver.sh is used to connect to the Azure build server.
-. connect_worker1.sh is used to connect to the the runworker number 1
-. connect_worker1.sh is used to connect to the the runworker number 2
+. connect_manager.sg is used to connect to the manager
+. connect_worker1.sh is used to connect to the runworker number 1
+. connect_worker1.sh is used to connect to the runworker number 2
 
 
 On the manager:
