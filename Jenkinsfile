@@ -3,7 +3,7 @@ pipeline {
     stages {
 	stage('build') {
 	    steps {
-                sh 'mvn --version'
+                sh 'docker build -t sebmarc/echoservice:latest server/src/Dockerfile'
             }
         }
     }
