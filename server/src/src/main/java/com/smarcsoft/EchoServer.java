@@ -19,6 +19,8 @@ package com.smarcsoft;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,31 +28,25 @@ import java.util.logging.Logger;
 /**
  * Server that manages startup/shutdown of a {@code Greeter} server.
  */
-public class HelloWorldServer
-{
-  private static final Logger logger = Logger.getLogger(HelloWorldServer.class.getName());
+public class EchoServer {
+  private static final Logger logger = Logger.getLogger(EchoServer.class.getName());
 
   private Server server;
 
-  private void start() throws IOException
-  {
+  private void start() throws IOException {
     /* The port on which the server should run */
     int port = 50051;
     server = ServerBuilder.forPort(port).addService(new EchoImpl()).build().start();
     logger.log(Level.INFO, "Server started, listening on {0}", port);
-    Runtime.getRuntime().addShutdownHook(new Thread()
-    {
+    Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
-      public void run()
-      {
+      public void run() {
         // Use stderr here since the logger may have been reset by its JVM shutdown
         // hook.
         System.err.println("*** shutting down gRPC server since JVM is shutting down");
-        try
-        {
-          HelloWorldServer.this.stop();
-        } catch (InterruptedException e)
-        {
+        try {
+          EchoServer.this.stop();
+        } catch (InterruptedException e) {
           e.printStackTrace(System.err);
           Thread.currentThread().interrupt();
         }
@@ -59,10 +55,8 @@ public class HelloWorldServer
     });
   }
 
-  private void stop() throws InterruptedException
-  {
-    if (server != null)
-    {
+  private void stop() throws InterruptedException {
+    if (server != null) {
       server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
     }
   }
@@ -71,10 +65,8 @@ public class HelloWorldServer
    * Await termination on the main thread since the grpc library uses daemon
    * threads.
    */
-  private void blockUntilShutdown() throws InterruptedException
-  {
-    if (server != null)
-    {
+  private void blockUntilShutdown() throws InterruptedException {
+    if (server != null) {
       server.awaitTermination();
     }
   }
@@ -82,21 +74,25 @@ public class HelloWorldServer
   /**
    * Main launches the server from the command line.
    */
-  public static void main(String[] args) throws IOException, InterruptedException
-  {
-    final HelloWorldServer server = new HelloWorldServer();
+  public static void main(String[] args) throws IOException, InterruptedException {
+    final EchoServer server = new EchoServer();
     server.start();
     server.blockUntilShutdown();
   }
 
-  static class EchoImpl extends EchoGrpc.EchoImplBase
-  {
+  static class EchoImpl extends EchoGrpc.EchoImplBase {
 
     @Override
     public void say(com.smarcsoft.HelloRequest request,
-        io.grpc.stub.StreamObserver<com.smarcsoft.HelloReply> responseObserver)
-    {
-      HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
+        io.grpc.stub.StreamObserver<com.smarcsoft.HelloReply> responseObserver) {
+      logger.log(Level.INFO, "Service request " + request.getName());
+      String response;
+      try {
+        response = "Hello " + request.getName() + " from " + InetAddress.getLocalHost().getHostName();
+      } catch (UnknownHostException e) {
+        response = "Hello " + request.getName() + " from unknown host";
+      }
+      HelloReply reply = HelloReply.newBuilder().setMessage(response).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }

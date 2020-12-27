@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  echo:
+    image: echoservice:latest
+    ports:
+      - "50051"
+    networks:
+      app-net:
+        aliases:
+          - echoserver
+
+
+  echoclient:
+    image: echoclient:latest
+    container_name: echoclient
+    networks:
+      - app-net
+    depends_on:
+      - echo
+
+
+networks:
+  app-net:
+    name: nat

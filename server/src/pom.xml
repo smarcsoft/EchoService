@@ -135,7 +135,7 @@
                     <archive>
                     <manifest>
                         <mainClass>
-                            com.smarcsoft.HelloWorldServer
+                            com.smarcsoft.EchoServer
                         </mainClass>
                     </manifest>
                     </archive>
@@ -146,6 +146,31 @@
             </execution>
         </executions>
       </plugin>
+      <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>copy-resource-one</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+
+                    <configuration>
+                        <outputDirectory>${basedir}/../../client/target</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/target</directory>
+                                <includes>
+                                    <include>${project.artifactId}-${project.version}.jar</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+           </executions>
+        </plugin>
     </plugins>
   </build>
 </project>
