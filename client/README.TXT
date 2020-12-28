@@ -10,3 +10,6 @@ docker push sebmarc/echoclient:1.0
 Notes:
 Take a look at the Dockerfile. It build the client and then contruct the image from the results of the build.
  
+To run the client:
+------------------
+docker-compose up
