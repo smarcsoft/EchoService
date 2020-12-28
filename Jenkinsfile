@@ -14,16 +14,22 @@ pipeline
             dir("server")
             {
                 sh 'docker-compose up -d'
+                sh 'sleep 5'
             }
             dir('client')
             {
                 echo 'Testing: Running the client'
                 sh 'docker-compose up'
             }
-            dir('server')
-            {
-                echo 'Testing: Shutting down service'
-                sh 'docker-compose down'
+        }
+        post { 
+            always { 
+             echo 'cleaning up...'
+             dir('server')
+             {
+                 echo 'Testing: Shutting down service'
+                 sh 'docker-compose down'
+             }
             }
         }
     }
@@ -34,10 +40,13 @@ pipeline
         }
     }
     stage('deploycluster') {
-        steps{
+        steps {
             echo 'Deploying to swarm cluster...'
             echo 'Starting cluster up...'
-            
+            dir('scripts/jenkins')
+            {
+                sh 'start_cluster.sh'
+            }
         }
     }
   }
