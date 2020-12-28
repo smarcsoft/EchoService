@@ -14,6 +14,14 @@ pipeline
             dir("server")
             {
                 sh 'docker-compose up -d'
+            }
+            dir('client')
+            {
+                echo 'Testing: Running the client'
+                sh 'docker-compose up'
+            }
+            dir('server')
+            {
                 echo 'Testing: Shutting down service'
                 sh 'docker-compose down'
             }
