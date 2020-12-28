@@ -13,7 +13,7 @@ pipeline
             echo 'Testing: Starting echo service'
             dir("server")
             {
-                sh 'docker-compose up -d'
+                sh 'dcker-compose up -d'
             }
             dir('client')
             {
