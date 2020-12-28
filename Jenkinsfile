@@ -33,5 +33,12 @@ pipeline
             sh 'docker push sebmarc/echoservice:latest'
         }
     }
+    stage('deploycluster') {
+        steps{
+            echo 'Deploying to swarm cluster...'
+            echo 'Starting cluster up...'
+            
+        }
+    }
   }
 }

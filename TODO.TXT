@@ -1,6 +1,6 @@
 1. Continous integration
 Setup a continous build process on the build server - DONE
-Check that a code commit leads to a new build and container - IN PROGRESS
+Check that a code commit leads to a new build and container - DONE
 If a new image can be successfully build, push it to docker hub, and deploy it in the swarm cluster automatically
 
 2. Consolidated logs
