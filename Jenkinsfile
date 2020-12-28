@@ -11,10 +11,12 @@ pipeline
     stage('test') {
         steps {
             echo 'Testing: Starting echo service'
-            sh 'cd server'
-            sh 'docker-compose up -d'
-            echo 'Testing: Shutting down service'
-            sh 'docker-compose down'
+            dir("server")
+            {
+                sh 'docker-compose up -d'
+                echo 'Testing: Shutting down service'
+                sh 'docker-compose down'
+            }
         }
     }
     stage('pushdockerhub') {
