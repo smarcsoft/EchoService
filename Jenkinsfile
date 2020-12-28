@@ -16,6 +16,7 @@ pipeline
     stage('pushdockerhub') {
         steps {
             echo 'Pushing to docker hub repository...'
+            input "Confirm docker repository update ?"
             sh 'docker push sebmarc/echoservice:latest'
         }
     }
