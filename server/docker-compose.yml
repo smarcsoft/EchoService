@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   echo:
-    image: echoservice:latest
+    image: sebmarc/echoservice:latest
     ports:
       - "50051"
     networks:
