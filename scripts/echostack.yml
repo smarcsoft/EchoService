@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   echoserver:
-    image: sebmarc/echoservice:1.01
+    image: sebmarc/echoservice:latest
     ports:
       - 50051
     deploy:

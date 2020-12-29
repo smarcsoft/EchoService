@@ -21,7 +21,7 @@ pipeline
             dir('client')
             {
                 echo 'Testing: Running the client'
-                sh 'docker-compose up'
+                sh 'docker-compose up --force-recreate'
             }
         }
         post { 
