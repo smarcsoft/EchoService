@@ -6,7 +6,7 @@
   <groupId>com.smarcsoft.grpc</groupId>
   <artifactId>grpcclient</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +57,7 @@
       <dependency>
       <groupId>com.smarcsoft.grpc</groupId>
       <artifactId>grpcserver</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
   </dependencies>
 
