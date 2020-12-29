@@ -20,18 +20,21 @@ option objc_class_prefix = "HLW";
 
 package echo;
 
+import "google/protobuf/empty.proto";
+
 // The greeting service definition.
 service Echo {
   // Sends a greeting
-  rpc Say (HelloRequest) returns (HelloReply) {}
+  rpc Say (Request) returns (Reply);
+  rpc Version(google.protobuf.Empty) returns (Reply);
 }
 
 // The request message containing the user's name.
-message HelloRequest {
+message Request {
   string name = 1;
 }
 
 // The response message containing the greetings
-message HelloReply {
+message Reply {
   string message = 1;
 }

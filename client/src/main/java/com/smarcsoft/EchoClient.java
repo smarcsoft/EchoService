@@ -43,15 +43,17 @@ public class EchoClient {
   /** Say hello to server. */
   public void greet(String name) {
     logger.info("Will try to greet " + name + " ...");
-    HelloRequest request = HelloRequest.newBuilder().setName(name).build();
-    HelloReply response;
     try {
-      response = blockingStub.say(request);
+      Reply v = blockingStub.version(com.google.protobuf.Empty.getDefaultInstance());
+      String version = v.getMessage();
+      logger.info("Contacted server version " + version + " successfully...");
+      Request request = Request.newBuilder().setName(name).build();
+      Reply response = blockingStub.say(request);
+      logger.info("Greeting: " + response.getMessage());
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       return;
     }
-    logger.info("Greeting: " + response.getMessage());
   }
 
   /**
