@@ -7,7 +7,7 @@ pipeline
           echo 'Building server image...'
           sh 'docker build -t sebmarc/echoservice:latest server/src/'
           echo 'Building client image'
-          sh 'docker build -t sebmarc/echoclient:latest client/'
+          sh 'docker build -t sebmarc/echoclient:latest client/ --no-cache'
       }
     }
     stage('test') {
