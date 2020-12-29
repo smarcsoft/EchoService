@@ -49,6 +49,7 @@ pipeline
             dir('scripts/jenkins')
             {
                 sh './start_cluster.sh'
+                sh './update_cluster.sh'
             }
         }
     }
