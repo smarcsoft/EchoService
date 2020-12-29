@@ -48,7 +48,7 @@ pipeline
             echo 'Starting cluster up...'
             dir('scripts/jenkins')
             {
-                sh 'start_cluster.sh'
+                sh './start_cluster.sh'
             }
         }
     }
