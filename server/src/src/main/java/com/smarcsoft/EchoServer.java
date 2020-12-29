@@ -18,6 +18,8 @@ package com.smarcsoft;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.stub.StreamObserver;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,11 +27,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.protobuf.Empty;
+
 /**
  * Server that manages startup/shutdown of a {@code Greeter} server.
  */
 public class EchoServer {
   private static final Logger logger = Logger.getLogger(EchoServer.class.getName());
+
+  public static final String VERSION = "v1.0";
 
   private Server server;
 
@@ -83,8 +89,7 @@ public class EchoServer {
   static class EchoImpl extends EchoGrpc.EchoImplBase {
 
     @Override
-    public void say(com.smarcsoft.HelloRequest request,
-        io.grpc.stub.StreamObserver<com.smarcsoft.HelloReply> responseObserver) {
+    public void say(Request request, StreamObserver<Reply> responseObserver) {
       logger.log(Level.INFO, "Service request " + request.getName());
       String response;
       try {
@@ -92,10 +97,16 @@ public class EchoServer {
       } catch (UnknownHostException e) {
         response = "Hello " + request.getName() + " from unknown host";
       }
-      HelloReply reply = HelloReply.newBuilder().setMessage(response).build();
+      Reply reply = Reply.newBuilder().setMessage(response).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
 
+    @Override
+    public void version(Empty request, StreamObserver<Reply> responseObserver) {
+      Reply reply = Reply.newBuilder().setMessage("Version " + VERSION).build();
+      responseObserver.onNext(reply);
+      responseObserver.onCompleted();
+    }
   }
 }
