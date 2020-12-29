@@ -4,8 +4,10 @@ pipeline
   stages {
 	stage('build') {
       steps {
-          echo 'Building image...'
+          echo 'Building server image...'
           sh 'docker build -t sebmarc/echoservice:latest server/src/'
+          echo 'Building client image'
+          sh 'docker build -t sebmarc/echoclient:latest client/'
       }
     }
     stage('test') {
@@ -37,6 +39,7 @@ pipeline
         steps {
             echo 'Pushing to docker hub repository...'
             sh 'docker push sebmarc/echoservice:latest'
+            sh 'docker push sebmarc/echoclient:latest'
         }
     }
     stage('deploycluster') {
