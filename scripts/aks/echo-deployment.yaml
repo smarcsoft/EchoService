@@ -27,6 +27,8 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      annotations:
+        kubernetes.io/change-cause: "Update to v1.3"
       creationTimestamp: null
       labels:
         app: echoserver
