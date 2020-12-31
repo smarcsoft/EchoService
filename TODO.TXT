@@ -1,9 +1,6 @@
 1. Continous integration
 Setup a continous build process on the build server - DONE
 Check that a code commit leads to a new build and container - DONE
-If a new image can be successfully build, push it to docker hub, and deploy it in the swarm cluster automatically
+If a new image can be successfully build, push it to docker hub, and deploy it in the swarm cluster automatically - DONE
 
-2. Consolidated logs
-Use fluentd to centralize the logging system
-
-3. Replace docker swarm with kubernetes
+2. Replace docker swarm with kubernetes

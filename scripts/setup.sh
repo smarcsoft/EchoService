@@ -6,3 +6,5 @@ KEYS=$AZUREDIR/keys/smarcsoft.pem
 mkdir ~/keys
 cp $KEYS ~/keys
 chmod 400 ~/keys/smarcsoft.pem
+
+echo "If not already installed we need to client azure cli with: sudo az aks install-cli"
