@@ -1,7 +1,10 @@
-KEYS=$HOME/keys/smarcsoft.pem
 echo "Updating cluster with latest image version"
-echo "Connecting to manager..."
-SERVER_IP=$(az vm show -d --resource-group grpc --name manager --query "publicIps" -o tsv)
-echo "Connecting to Azure with server IP $SERVER_IP..."
-ssh -o StrictHostKeyChecking=no -i $KEYS smarcsoft@$SERVER_IP "cd src/EchoService;git pull;scripts/jenkins/perform_update.sh" 
+echo -n "  Getting latest deployment artifact..."
+cd $HOME
+git clone https://github.com/smarcsoft/EchoService
+cp EchoService/scripts/aks/echo-deployment.yaml $HOME/kube
+rm -rf EchoService
+echo "done."
+echo "Applying deployment..."
+kubectl apply -f $HOME/kube/echo-deployment.yaml
 

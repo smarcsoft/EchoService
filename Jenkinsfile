@@ -44,11 +44,9 @@ pipeline
     }
     stage('deploycluster') {
         steps {
-            echo 'Deploying to swarm cluster...'
-            echo 'Starting cluster up...'
+            echo 'Deploying to aks cluster...'
             dir('scripts/jenkins')
             {
-                sh './start_cluster.sh'
                 sh './update_cluster.sh'
             }
         }

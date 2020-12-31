@@ -4,3 +4,10 @@ Check that a code commit leads to a new build and container - DONE
 If a new image can be successfully build, push it to docker hub, and deploy it in the swarm cluster automatically - DONE
 
 2. Replace docker swarm with kubernetes
+
+3. Perform an update of the service in Kubernetes
+
+4. Add a maximizecpu function
+Take a number of seconds as a argument. The function will maximize the cpu for the number of seconds specified.
+Check if this is working using Azure Monitor.
+Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%.
