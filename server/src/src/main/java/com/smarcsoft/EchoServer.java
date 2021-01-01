@@ -23,6 +23,7 @@ import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +36,7 @@ import com.google.protobuf.Empty;
 public class EchoServer {
   private static final Logger logger = Logger.getLogger(EchoServer.class.getName());
 
-  public static final String VERSION = "v1.3";
+  public static final String VERSION = "v2.0";
 
   private Server server;
 
@@ -108,5 +109,24 @@ public class EchoServer {
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
+
+    @Override
+    public void cpu(com.smarcsoft.Seconds request,
+        io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
+          int secs = request.getSecs();
+          int r = new Random().nextInt(500);
+          String command="kubectl run cpu-"+r+" --image=sebmarc/cpu --restart=Never --attach=true --quiet=true --rm=true -- "+secs;
+          try{
+            Process p = Runtime.getRuntime().exec(command);
+            Iterations reply = Iterations.newBuilder().setIterations(Integer.parseInt(p.getOutputStream().toString())).build();
+            responseObserver.onNext(reply);
+          }
+          catch(IOException e)
+          {
+            Iterations reply = Iterations.newBuilder().setIterations(0).build();
+            responseObserver.onNext(reply);
+          }
+          responseObserver.onCompleted();
+        }
   }
 }

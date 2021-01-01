@@ -27,6 +27,7 @@ service Echo {
   // Sends a greeting
   rpc Say (Request) returns (Reply);
   rpc Version(google.protobuf.Empty) returns (Reply);
+  rpc Cpu(Seconds) returns (Iterations);
 }
 
 // The request message containing the user's name.
@@ -37,4 +38,12 @@ message Request {
 // The response message containing the greetings
 message Reply {
   string message = 1;
+}
+
+message Seconds {
+  int32 secs = 1;
+}
+
+message Iterations {
+  int64 iterations = 1;
 }

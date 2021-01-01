@@ -3,11 +3,16 @@ Setup a continous build process on the build server - DONE
 Check that a code commit leads to a new build and container - DONE
 If a new image can be successfully build, push it to docker hub, and deploy it in the swarm cluster automatically - DONE
 
-2. Replace docker swarm with kubernetes
+2. Replace docker swarm with kubernetes - DONE
 
-3. Perform an update of the service in Kubernetes
+3. Perform an update of the service in Kubernetes - DONE
 
-4. Add a maximizecpu function
-Take a number of seconds as a argument. The function will maximize the cpu for the number of seconds specified.
-Check if this is working using Azure Monitor.
+4. Call a script
+Create a shell script taking a number of seconds as an argument and doing an infinite loop until the number of seconds is reached. - DONE
+The script should output the number of iterations executed. - DONE
+Add a maximizecpu function in the echo service
+maximizecpu should call the script and return the number of iterations to the client.
+
+4. autoscaling
+Using Azure Monitor, look at the script pod cpu.
 Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%.

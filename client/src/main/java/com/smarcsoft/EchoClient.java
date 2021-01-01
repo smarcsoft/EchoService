@@ -28,7 +28,8 @@ import java.util.logging.Logger;
  */
 public class EchoClient {
   private static final Logger logger = Logger.getLogger(EchoClient.class.getName());
-
+  private static final int OP_ECHO = 0;
+  private static final int OP_CPU = 1;
   private final EchoGrpc.EchoBlockingStub blockingStub;
 
   /** Construct client for accessing Echo server using the existing channel. */
@@ -56,29 +57,50 @@ public class EchoClient {
     }
   }
 
+   /** Say hello to server. */
+   public void cpu(int secs) {
+    logger.info("Launch CPU cycles for " + secs + " seconds...");
+    try {
+      Iterations its = blockingStub.cpu(Seconds.newBuilder().setSecs(secs).build());
+      long it = its.getIterations();
+      logger.info("We have iterated " + it + " time for " + secs +" seconds...");
+    } catch (StatusRuntimeException e) {
+      logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    }
+  }
+
   /**
    * Greet server. If provided, the first element of {@code args} is the name to use in the
    * greeting. The second argument is the target server.
    */
   public static void main(String[] args) throws Exception {
     String user = "world";
+    int secs = 30;
     // Access a service running on the local machine on port 50051
     String target = "localhost:50051";
+
+    int op =OP_ECHO;
     // Allow passing in the user and target strings as command line arguments
     if (args.length > 0) {
       if ("--help".equals(args[0])) {
-        System.err.println("Usage: [name [target]]");
-        System.err.println("");
-        System.err.println("  name    The name you wish to be greeted by. Defaults to " + user);
-        System.err.println("  target  The server to connect to. Defaults to " + target);
+        printhelp(user, secs, target);
         System.exit(1);
       }
-      user = args[0];
+      if("echo".equals(args[0]))
+      {
+        if(args.length >1)
+          user=args[1];
+      }
+      if("cpu".equals(args[0]))
+      {
+        op = OP_CPU;
+        if(args.length >1)
+          secs=Integer.parseInt(args[1]);
+      }
+      if(args.length >2)
+      target=args[2];
     }
-    if (args.length > 1) {
-      target = args[1];
-    }
-
+   
     // Create a communication channel to the server, known as a Channel. Channels are thread-safe
     // and reusable. It is common to create channels at the beginning of your application and reuse
     // them until the application shuts down.
@@ -89,7 +111,15 @@ public class EchoClient {
         .build();
     try {
       EchoClient client = new EchoClient(channel);
-      client.greet(user);
+      switch(op)
+      {
+        case OP_ECHO:
+          client.greet(user);
+        break;
+        case OP_CPU:
+          client.cpu(secs);
+        break;
+      }
     } finally {
       // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
       // resources the channel should be shut down when it will no longer be used. If it may be used
@@ -97,5 +127,13 @@ public class EchoClient {
       channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
     }
   }
+
+  private static void printhelp(String user, int secs, String target) {
+    System.err.println("Usage: [echo | cpu ] [args] ");
+    System.err.println("");
+    System.err.println("  echo    [name target]. Defaults to " + user);
+    System.err.println("  cpu     [secs target]. Number of seconds on which the cpu will be pegged. Default to " + secs +" seconds");
+    System.err.println("target is the host:port of the server. Default to " + target);
+  } 
 }
 
