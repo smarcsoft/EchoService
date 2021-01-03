@@ -12,7 +12,7 @@ metadata:
 spec:
   externalTrafficPolicy: Cluster
   ports:
-  - nodePort: 32678
+  - nodePort: 32677
     port: 50051
     protocol: TCP
     targetPort: 50051
