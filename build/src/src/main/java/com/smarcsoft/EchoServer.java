@@ -145,23 +145,34 @@ public class EchoServer {
             }
             else
             {
-              logger.log(Level.SEVERE, "kubectly could not be involved successfully. Returned code = {0}", exitCode);
+              logger.log(Level.SEVERE, "kubectly could not be invoked successfully. Returned code = {0}", exitCode);
               Iterations reply = Iterations.newBuilder().setIterations(0).build();
               responseObserver.onNext(reply);
             }
           }
           catch(IOException e)
           {
-            logger.log(Level.SEVERE, "kubectly could not be involved successfully. IOException: ({0} )", e.getLocalizedMessage());
+            logger.log(Level.SEVERE, "kubectly could not be invoked successfully. IOException: ({0})", e.getLocalizedMessage());
             Iterations reply = Iterations.newBuilder().setIterations(0).build();
             responseObserver.onNext(reply);
           }
           catch(InterruptedException e)
           {
-            logger.log(Level.SEVERE, "kubectly could not be involved successfully. InterruptedException: ({0} )", e.getLocalizedMessage());
+            logger.log(Level.SEVERE, "kubectly could not be invoked successfully. InterruptedException: ({0})", e.getLocalizedMessage());
             Iterations reply = Iterations.newBuilder().setIterations(0).build();
             responseObserver.onNext(reply);
           }
+          catch(SecurityException e)
+          {
+            logger.log(Level.SEVERE, "kubectly could not be invoked successfully. SecurityException: ({0})", e.getLocalizedMessage());
+            Iterations reply = Iterations.newBuilder().setIterations(0).build();
+            responseObserver.onNext(reply);
+          }
+          finally
+          {
+            logger.log(Level.INFO, "kubectly invocation end.");
+          }
+
           responseObserver.onCompleted();
         }
   }
