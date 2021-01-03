@@ -28,7 +28,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubernetes.io/change-cause: "Update to v2.1"
+        kubernetes.io/change-cause: "Update to v2.1 - logging"
       creationTimestamp: null
       labels:
         app: echoserver
