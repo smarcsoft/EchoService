@@ -20,7 +20,7 @@ pipeline
             {
                 sh 'timeout 15s ./runserver.sh&'
                 sh 'sleep 5'
-                sh './runclient.sh'
+                sh './runclient.sh -l'
             }
         }
 
