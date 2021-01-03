@@ -7,12 +7,6 @@ To compile:
 -----------
 mvn package
 
-To build the docker container of the server:
---------------------------------------------
-docker build -t sebmarc/echoservice:vM.mm .
-
-To push it to the docker repo:
-------------------------------
-docker push sebmarc/echoservice:vM.mm
+To build the docker containers go to the docker directory
 
 Seb.

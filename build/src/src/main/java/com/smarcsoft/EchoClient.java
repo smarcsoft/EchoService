@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.lang.model.util.ElementScanner6;
+
 /**
  * A simple client that requests a greeting from the {@link EchoServer}.
  */
@@ -90,12 +92,16 @@ public class EchoClient {
       {
         if(args.length >1)
           user=args[1];
-      }
+      } else
       if("cpu".equals(args[0]))
       {
         op = OP_CPU;
         if(args.length >1)
           secs=Integer.parseInt(args[1]);
+      } else 
+      {
+        printhelp(user, secs, target);
+        System.exit(1);
       }
       if(args.length >2)
       target=args[2];

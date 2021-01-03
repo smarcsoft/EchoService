@@ -4,36 +4,25 @@ pipeline
   stages {
 	stage('build') {
       steps {
-          echo 'Building server image...'
-          sh 'docker build -t sebmarc/echoservice:latest server/src/'
-          echo 'Building client image'
-          sh 'docker build -t sebmarc/echoclient:latest client/ --no-cache'
+          dir('docker')
+          {
+            echo 'Building server image...'
+            sh './buildserver.sh'
+            echo 'Building client image'
+            sh './buildclient.sh'
       }
     }
     stage('test') {
         steps {
             echo 'Testing: Starting echo service'
-            dir("server")
+            dir("scripts")
             {
-                sh 'docker-compose up -d'
+                sh 'timeout 15s ./runserver.sh'
                 sh 'sleep 5'
-            }
-            dir('client')
-            {
-                echo 'Testing: Running the client'
-                sh 'docker-compose up --force-recreate'
+                sh './runclient.sh'
             }
         }
-        post { 
-            always { 
-             echo 'cleaning up...'
-             dir('server')
-             {
-                 echo 'Testing: Shutting down service'
-                 sh 'docker-compose down'
-             }
-            }
-        }
+
     }
     stage('pushdockerhub') {
         steps {
@@ -50,6 +39,5 @@ pipeline
                 sh './update_cluster.sh'
             }
         }
-    }
   }
 }

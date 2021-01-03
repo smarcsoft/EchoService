@@ -16,3 +16,6 @@ maximizecpu should call the script and return the number of iterations to the cl
 4. autoscaling
 Using Azure Monitor, look at the script pod cpu.
 Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%.
+
+5. Service Mesh
+Investigate service mesh on Azure.

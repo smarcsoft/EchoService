@@ -6,13 +6,10 @@ To run the service on the manager:
 ----------------------------------
 deploy-service.sh
 
-On the workers:
----------------
-docker swarm join ...
-
-
 To run the client:
 ------------------
 runclient.sh
 
-
+To run the server locally (not using AKS):
+------------------------------------------
+runserver.sh
