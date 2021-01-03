@@ -1,6 +1,7 @@
 echo "Updating cluster with latest image version"
 echo -n "  Getting latest deployment artifact..."
 cd $HOME
+rm -rf EchoService
 git clone https://github.com/smarcsoft/EchoService
 cp EchoService/scripts/aks/echo-deployment.yaml $HOME/kube
 rm -rf EchoService
