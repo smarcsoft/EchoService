@@ -20,7 +20,10 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -113,15 +116,43 @@ public class EchoServer {
     @Override
     public void cpu(com.smarcsoft.Seconds request,
         io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
+          logger.log(Level.INFO, "cpu invoked");
           int secs = request.getSecs();
+          logger.log(Level.INFO, "asked to run cpu for {0} seconds", secs);
           int r = new Random().nextInt(500);
           String command="kubectl run cpu-"+r+" --image=sebmarc/cpu --restart=Never --attach=true --quiet=true --rm=true -- "+secs;
           try{
+            logger.log(Level.INFO, "invoking: {0}",  command);
             Process p = Runtime.getRuntime().exec(command);
-            Iterations reply = Iterations.newBuilder().setIterations(Integer.parseInt(p.getOutputStream().toString())).build();
-            responseObserver.onNext(reply);
+            InputStream stream = p.getInputStream();
+            InputStreamReader isr = new InputStreamReader(stream);
+            BufferedReader br = new BufferedReader(isr);
+            String tmp;
+            String output="";
+            while((tmp = br.readLine()) != null)
+            {
+              output = output + tmp;
+            }
+            int exitCode = p.waitFor();
+            if(exitCode == 0)
+            {
+              long it_returned = Integer.parseInt(output);
+              logger.log(Level.INFO, "command returned with  {0} iterations", it_returned);
+              Iterations reply = Iterations.newBuilder().setIterations(it_returned).build();
+              responseObserver.onNext(reply);
+            }
+            else
+            {
+              Iterations reply = Iterations.newBuilder().setIterations(0).build();
+              responseObserver.onNext(reply);
+            }
           }
           catch(IOException e)
+          {
+            Iterations reply = Iterations.newBuilder().setIterations(0).build();
+            responseObserver.onNext(reply);
+          }
+          catch(InterruptedException e)
           {
             Iterations reply = Iterations.newBuilder().setIterations(0).build();
             responseObserver.onNext(reply);
