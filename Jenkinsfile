@@ -10,6 +10,7 @@ pipeline
             sh './buildserver.sh'
             echo 'Building client image'
             sh './buildclient.sh'
+         }
       }
     }
     stage('test') {
