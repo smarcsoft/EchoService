@@ -39,7 +39,7 @@ import com.google.protobuf.Empty;
 public class EchoServer {
   private static final Logger logger = Logger.getLogger(EchoServer.class.getName());
 
-  public static final String VERSION = "v2.1";
+  public static final String VERSION = "v2.1.1";
 
   private Server server;
 
