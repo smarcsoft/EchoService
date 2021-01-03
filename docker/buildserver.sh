@@ -1,1 +1,1 @@
-docker build -f server/Dockerfile -t smarcsoft/echoserver:latest ../build
+docker build -f server/Dockerfile -t sebmarc/echoserver:latest ../build

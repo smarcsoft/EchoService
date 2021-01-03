@@ -1,1 +1,1 @@
-docker build -f client/Dockerfile -t smarcsoft/echoclient:latest .
+docker build -f client/Dockerfile -t sebmarc/echoclient:latest .

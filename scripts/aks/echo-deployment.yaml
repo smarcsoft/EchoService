@@ -34,7 +34,7 @@ spec:
         app: echoserver
     spec:
       containers:
-      - image: smarcsoft/echoserver:latest
+      - image: sebmarc/echoserver:latest
         imagePullPolicy: Always
         name: echoservice
         ports:
