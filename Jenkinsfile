@@ -18,7 +18,7 @@ pipeline
             echo 'Testing: Starting echo service'
             dir("scripts")
             {
-                sh 'timeout 15s ./runserver.sh'
+                sh 'timeout 15s ./runserver.sh&'
                 sh 'sleep 5'
                 sh './runclient.sh'
             }
