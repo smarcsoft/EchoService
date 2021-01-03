@@ -28,8 +28,8 @@ pipeline
     stage('pushdockerhub') {
         steps {
             echo 'Pushing to docker hub repository...'
-            sh 'docker push smarcsoft/echoserver:latest'
-            sh 'docker push smarcsoft/echoclient:latest'
+            sh 'docker push sebmarc/echoserver:latest'
+            sh 'docker push sebmarc/echoclient:latest'
         }
     }
     stage('deploycluster') {
