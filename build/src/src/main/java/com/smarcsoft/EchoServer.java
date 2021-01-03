@@ -94,7 +94,7 @@ public class EchoServer {
 
     @Override
     public void say(Request request, StreamObserver<Reply> responseObserver) {
-      logger.log(Level.INFO, "Service request " + request.getName());
+      logger.log(Level.INFO, "Service request {0}", request.getName());
       String response;
       try {
         response = "Hello " + request.getName() + " from " + InetAddress.getLocalHost().getHostName();
@@ -116,7 +116,7 @@ public class EchoServer {
     @Override
     public void cpu(com.smarcsoft.Seconds request,
         io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
-          logger.log(Level.INFO, "cpu invoked");
+          logger.log(Level.INFO, "cpu invoked (version {0})", VERSION);
           int secs = request.getSecs();
           logger.log(Level.INFO, "asked to run cpu for {0} seconds", secs);
           int r = new Random().nextInt(500);
@@ -133,9 +133,11 @@ public class EchoServer {
             {
               output = output + tmp;
             }
+            logger.log(Level.INFO, "output read from the process invokation: {0}", output);
             int exitCode = p.waitFor();
             if(exitCode == 0)
             {
+              logger.log(Level.INFO, "kubectl returned successfully");
               long it_returned = Integer.parseInt(output);
               logger.log(Level.INFO, "command returned with  {0} iterations", it_returned);
               Iterations reply = Iterations.newBuilder().setIterations(it_returned).build();
@@ -143,17 +145,20 @@ public class EchoServer {
             }
             else
             {
+              logger.log(Level.SEVERE, "kubectly could not be involved successfully. Returned code = {0}", exitCode);
               Iterations reply = Iterations.newBuilder().setIterations(0).build();
               responseObserver.onNext(reply);
             }
           }
           catch(IOException e)
           {
+            logger.log(Level.SEVERE, "kubectly could not be involved successfully. IOException: ({0} )", e.getLocalizedMessage());
             Iterations reply = Iterations.newBuilder().setIterations(0).build();
             responseObserver.onNext(reply);
           }
           catch(InterruptedException e)
           {
+            logger.log(Level.SEVERE, "kubectly could not be involved successfully. InterruptedException: ({0} )", e.getLocalizedMessage());
             Iterations reply = Iterations.newBuilder().setIterations(0).build();
             responseObserver.onNext(reply);
           }
