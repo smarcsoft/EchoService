@@ -13,15 +13,22 @@ print_help() {
 echo "Running client: "
 #Getting the IP address of the service load balancer
 IP=127.0.0.1
-CPU=30
-while getopts ="ac:hl" opt; do
+CPU=0
+CPUJOB=0
+while getopts ="ac:j:hl" opt; do
     case $opt in
 	l) IP=127.0.0.1 ;;
 	a) IP=$(kubectl get services echoserver -o=jsonpath='{.status.loadBalancer.ingress[0].ip}') ;;
 	c) CPU=${OPTARG} ;;
+    j) CPUJOB=${OPTARG} ;;
 	h) print_help ;;
     esac
 done
 echo "Contacting server at $IP..."
 docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient echo hello $IP:50051
-docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu $CPU $IP:50051
+if [ $CPU -gt 0]
+  docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu $CPU $IP:50051
+fi
+if [ $CPUJOB -gt 0]
+  docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpujob $CPU $IP:50051
+fi

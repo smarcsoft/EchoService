@@ -32,6 +32,8 @@ public class EchoClient {
   private static final Logger logger = Logger.getLogger(EchoClient.class.getName());
   private static final int OP_ECHO = 0;
   private static final int OP_CPU = 1;
+  private static final int OP_CPUJOB = 2;
+
   private final EchoGrpc.EchoBlockingStub blockingStub;
 
   /** Construct client for accessing Echo server using the existing channel. */
@@ -45,11 +47,11 @@ public class EchoClient {
 
   /** Say hello to server. */
   public void greet(String name) {
-    logger.info("Will try to greet " + name + " ...");
+    logger.log(Level.INFO, "Will try to greet {0} ...", name);
     try {
       Reply v = blockingStub.version(com.google.protobuf.Empty.getDefaultInstance());
       String version = v.getMessage();
-      logger.info("Contacted server version " + version + " successfully...");
+      logger.log(Level.INFO,"Contacted server version {0} successfully...", version);
       Request request = Request.newBuilder().setName(name).build();
       Reply response = blockingStub.say(request);
       logger.info("Greeting: " + response.getMessage());
@@ -61,9 +63,21 @@ public class EchoClient {
 
    /** Say hello to server. */
    public void cpu(int secs) {
-    logger.info("Launch CPU cycles for " + secs + " seconds...");
+    logger.log(Level.INFO, "Launch CPU cycles for {0} seconds...", secs);
     try {
       Iterations its = blockingStub.cpu(Seconds.newBuilder().setSecs(secs).build());
+      long it = its.getIterations();
+      logger.info("We have iterated " + it + " time for " + secs +" seconds...");
+    } catch (StatusRuntimeException e) {
+      logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    }
+  }
+
+  /** Say hello to server. */
+  public void cpuJob(int secs) {
+    logger.log(Level.INFO, "Launch CPU cycles for {0} seconds...", secs);
+    try {
+      Iterations its = blockingStub.cpuJob(Seconds.newBuilder().setSecs(secs).build());
       long it = its.getIterations();
       logger.info("We have iterated " + it + " time for " + secs +" seconds...");
     } catch (StatusRuntimeException e) {
@@ -93,6 +107,12 @@ public class EchoClient {
         if(args.length >1)
           user=args[1];
       } else
+      if("cpujob".equals(args[0]))
+      {
+        op = OP_CPUJOB;
+        if(args.length >1)
+          secs=Integer.parseInt(args[1]);
+      } else 
       if("cpu".equals(args[0]))
       {
         op = OP_CPU;
@@ -104,7 +124,7 @@ public class EchoClient {
         System.exit(1);
       }
       if(args.length >2)
-      target=args[2];
+        target=args[2];
     }
    
     // Create a communication channel to the server, known as a Channel. Channels are thread-safe
@@ -125,6 +145,8 @@ public class EchoClient {
         case OP_CPU:
           client.cpu(secs);
         break;
+        case OP_CPUJOB:
+        client.cpuJob(secs);
       }
     } finally {
       // ManagedChannels use resources like threads and TCP connections. To prevent leaking these

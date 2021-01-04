@@ -26,8 +26,12 @@ import "google/protobuf/empty.proto";
 service Echo {
   // Sends a greeting
   rpc Say (Request) returns (Reply);
+  // Returns the version of the server
   rpc Version(google.protobuf.Empty) returns (Reply);
+  // Run the cpu function
   rpc Cpu(Seconds) returns (Iterations);
+  // Run the cpu function through the execution of a separate job
+  rpc CpuJob(Seconds) returns (Iterations);
 }
 
 // The request message containing the user's name.

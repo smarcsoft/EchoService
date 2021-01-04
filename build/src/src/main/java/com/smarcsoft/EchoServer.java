@@ -114,11 +114,10 @@ public class EchoServer {
     }
 
     @Override
-    public void cpu(com.smarcsoft.Seconds request,
-        io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
-          logger.log(Level.INFO, "cpu invoked (version {0})", VERSION);
+    public void cpuJob(Seconds request, StreamObserver<Iterations> responseObserver) {
+      logger.log(Level.INFO, "cpuJob invoked (version {0})", VERSION);
           int secs = request.getSecs();
-          logger.log(Level.INFO, "asked to run cpu for {0} seconds", secs);
+          logger.log(Level.INFO, "asked to run cpuJob for {0} seconds", secs);
           int r = new Random().nextInt(500);
           String command="kubectl run cpu-"+r+" --image=sebmarc/cpu --restart=Never --attach=true --quiet=true --rm=true -- "+secs;
           try{
@@ -173,6 +172,28 @@ public class EchoServer {
             logger.log(Level.INFO, "kubectly invocation end.");
           }
 
+          responseObserver.onCompleted();
+    }
+
+    @Override
+    public void cpu(com.smarcsoft.Seconds request,
+        io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
+          logger.log(Level.INFO, "cpu invoked (version {0})", VERSION);
+
+          long start_time = System.currentTimeMillis();
+          long end_time = start_time+request.getSecs() * 1000;
+          long current_time = start_time;
+          long iterations = 0;
+
+          while(current_time < end_time)
+          {
+            current_time = System.currentTimeMillis();
+            iterations++;
+          }
+
+          Iterations reply = Iterations.newBuilder().setIterations(iterations).build();
+          responseObserver.onNext(reply);
+          logger.log(Level.INFO, "kubectly invocation end.");
           responseObserver.onCompleted();
         }
   }
