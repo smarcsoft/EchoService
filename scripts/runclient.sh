@@ -26,9 +26,11 @@ while getopts ="ac:j:hl" opt; do
 done
 echo "Contacting server at $IP..."
 docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient echo hello $IP:50051
-if [ $CPU -gt 0]
+if [ $CPU -gt 0 ]
+then
   docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu $CPU $IP:50051
 fi
-if [ $CPUJOB -gt 0]
+if [ $CPUJOB -gt 0 ]
+then
   docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpujob $CPU $IP:50051
 fi
