@@ -1,8 +1,9 @@
 #!/bin/bash
 print_help() {
-    echo "runclient.sh [-l | -a]"
+    echo "runclient.sh [-l | -a {-c <seonds>]"
     echo "  -l to run the client to target a local server"
     echo "  -a to run the client to target the AKS Kubernetes cluster"
+    echo "  -c run CPU for <seconds> seconds"
     exit 1
 }
 
@@ -12,13 +13,15 @@ print_help() {
 echo "Running client: "
 #Getting the IP address of the service load balancer
 IP=127.0.0.1
-while getopts ="ahl" opt; do
+CPU=30
+while getopts ="ac:hl" opt; do
     case $opt in
 	l) IP=127.0.0.1 ;;
 	a) IP=$(kubectl get services echoserver -o=jsonpath='{.status.loadBalancer.ingress[0].ip}') ;;
+	c) CPU=${OPTARG} ;;
 	h) print_help ;;
     esac
 done
 echo "Contacting server at $IP..."
 docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient echo hello $IP:50051
-docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu 30 $IP:50051
+docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu $CPU $IP:50051
