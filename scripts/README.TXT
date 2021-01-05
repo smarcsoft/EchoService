@@ -1,6 +1,7 @@
 . setup.sh should only be ran once. It sets up the connection keys
+. startup.sh creates the AKS cluster and deploy the services on it
 . connect_buildserver.sh is used to connect to the Azure build server.
-. create_cluster.sh creates the kubernetes cluster (run it if not already created).
+. shutdown.sh shuts down everything to reduce costs
 
 To run the service on the manager:
 ----------------------------------
