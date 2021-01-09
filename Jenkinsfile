@@ -3,7 +3,7 @@ pipeline
   agent any
   environment { 
         VERSION_STRING = 'v2.2.1'
-        BUILD_STRING=${VERSION}_build:${env.BUILD_NUMBER}
+        BUILD_STRING=${VERSION_STRING}_build:${env.BUILD_NUMBER}
     }
   stages {
 	stage('build') {
