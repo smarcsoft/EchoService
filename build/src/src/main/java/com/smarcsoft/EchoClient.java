@@ -98,40 +98,39 @@ public class EchoClient {
 
     int op =OP_ECHO;
 
-    // Allow passing in the user and target strings as command line arguments
-    if (args.length > 0) {
+    int arg_number = args.length;
+    while (arg_number >0)
+    {
+      // Allow passing in the user and target strings as command line arguments
       if ("--help".equals(args[0])) {
         printhelp(user, secs, target);
         System.exit(1);
       }
       if("echo".equals(args[0]))
       {
-        if(args.length >1)
-          user=args[1];
-      } else
+        arg_number--; op = OP_ECHO;
+        if(arg_number >1) { user=args[1]; arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
+      }
       if("cpujob".equals(args[0]))
       {
-        op = OP_CPUJOB;
-        if(args.length >1)
-          secs=Integer.parseInt(args[1]);
+        arg_number--; op = OP_CPUJOB;
+        if(arg_number >1) { secs=Integer.parseInt(args[1]); arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
       } else 
       if("cpu".equals(args[0]))
       {
-        op = OP_CPU;
-        if(args.length >1)
-          secs=Integer.parseInt(args[1]);
+        arg_number--; op = OP_CPU;
+        if(arg_number >1) { secs=Integer.parseInt(args[1]);arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
       } else
       if("batch".equals(args[0]))
       {
-        if(args.length >1)
-          batch_size=Integer.parseInt(args[1]);
+        arg_number--; 
+        if(arg_number >1) { batch_size=Integer.parseInt(args[1]);arg_number--;} else {printhelp(user, secs, target);System.exit(1); }
       } else 
       {
         printhelp(user, secs, target);
         System.exit(1);
       }
-      if(args.length >2)
-        target=args[2];
+      if(arg_number == 1) {target=args[args.length-1];arg_number--;}
     }
    
     // Create a communication channel to the server, known as a Channel. Channels are thread-safe
