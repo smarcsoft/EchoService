@@ -99,38 +99,40 @@ public class EchoClient {
     int op =OP_ECHO;
 
     int arg_number = args.length;
+    int arg_current = 0;
+    logger.log(Level.INFO,"Processing arguments...");
     while (arg_number >0)
     {
       // Allow passing in the user and target strings as command line arguments
-      if ("--help".equals(args[0])) {
+      if ("--help".equals(args[arg_current])) {
         printhelp(user, secs, target);
         System.exit(1);
       }
-      if("echo".equals(args[0]))
+      if("echo".equals(args[arg_current]))
       {
-        arg_number--; op = OP_ECHO;
-        if(arg_number >1) { user=args[1]; arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
+        arg_number--; op = OP_ECHO;arg_current++;
+        logger.log(Level.INFO, "Echo...");
+        if(arg_number >1) { user=args[arg_current]; arg_current++;arg_number--; logger.log(Level.INFO, "on {0}...", user); } else {printhelp(user, secs, target);System.exit(1); }
       }
-      if("cpujob".equals(args[0]))
+      if("cpujob".equals(args[arg_current]))
       {
-        arg_number--; op = OP_CPUJOB;
-        if(arg_number >1) { secs=Integer.parseInt(args[1]); arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
+        logger.log(Level.INFO, "CPUJOB...");
+        arg_number--; arg_current++; op = OP_CPUJOB;
+        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]); arg_number--; logger.log(Level.INFO, "For {0} seconds.", secs);arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
       } else 
-      if("cpu".equals(args[0]))
+      if("cpu".equals(args[arg_current]))
       {
-        arg_number--; op = OP_CPU;
-        if(arg_number >1) { secs=Integer.parseInt(args[1]);arg_number--; } else {printhelp(user, secs, target);System.exit(1); }
+        logger.log(Level.INFO, "CPU...");
+        arg_number--; op = OP_CPU;arg_current++;
+        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "For {o} seconds", secs);} else {printhelp(user, secs, target);System.exit(1); }
       } else
-      if("batch".equals(args[0]))
+      if("batch".equals(args[arg_current]))
       {
-        arg_number--; 
-        if(arg_number >1) { batch_size=Integer.parseInt(args[1]);arg_number--;} else {printhelp(user, secs, target);System.exit(1); }
-      } else 
-      {
-        printhelp(user, secs, target);
-        System.exit(1);
-      }
-      if(arg_number == 1) {target=args[args.length-1];arg_number--;}
+        logger.log(Level.INFO, "Batched for ...");
+        arg_number--; arg_current++;
+        if(arg_number >1) { batch_size=Integer.parseInt(args[arg_current]);arg_number--;logger.log(Level.INFO, "{0} jobs...", batch_size); } else {printhelp(user, secs, target);System.exit(1); }
+      } 
+      if(arg_number == 1) {target=args[args.length-1];arg_number--;logger.log(Level.INFO, "On service {0}...", target);}
     }
    
     // Create a communication channel to the server, known as a Channel. Channels are thread-safe

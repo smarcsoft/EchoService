@@ -28,12 +28,12 @@ while getopts ="ac:j:hl" opt; do
     esac
 done
 echo "Contacting server at $IP..."
-docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient echo hello batch $REQUESTS $IP:50051
+docker run --network host sebmarc/echoclient:latest com.smarcsoft.EchoClient echo hello batch $REQUESTS $IP:50051
 if [ $CPU -gt 0 ]
 then
-  docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpu $CPU batch $REQUESTS $IP:50051
+  docker run --network host sebmarc/echoclient:latest com.smarcsoft.EchoClient cpu $CPU batch $REQUESTS $IP:50051
 fi
 if [ $CPUJOB -gt 0 ]
 then
-  docker run --network host smarcsoft/echoclient:latest com.smarcsoft.EchoClient cpujob $CPU batch $REQUESTS $IP:50051
+  docker run --network host sebmarc/echoclient:latest com.smarcsoft.EchoClient cpujob $CPU batch $REQUESTS $IP:50051
 fi

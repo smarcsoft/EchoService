@@ -47,7 +47,7 @@ public class EchoServer {
     /* The port on which the server should run */
     int port = 50051;
     server = ServerBuilder.forPort(port).addService(new EchoImpl()).build().start();
-    logger.log(Level.INFO, "Server started, listening on {0}", port);
+    logger.log(Level.INFO, "Server {0} started, listening on {1}", new Object[]{VERSION, port});
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
