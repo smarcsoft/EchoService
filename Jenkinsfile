@@ -3,7 +3,6 @@ pipeline
   agent any
   environment { 
         VERSION_STRING = 'v2.2.1'
-        BUILD_STRING=${VERSION_STRING}_build:${env.BUILD_NUMBER}
     }
   stages {
 	stage('build') {
@@ -41,7 +40,7 @@ pipeline
             echo 'Deploying to aks cluster...'
             dir('scripts/jenkins')
             {
-                sh './update_cluster.sh ${env.VERSION_STRING} ${env.BUILD_STRING}'
+                sh './update_cluster.sh ${env.VERSION_STRING} ${VERSION_STRING}_build:${BUILD_NUMBER}'
             }
         }
     }
