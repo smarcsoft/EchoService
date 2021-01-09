@@ -9,8 +9,8 @@ pipeline
       steps {
           dir('docker')
           {
-            echo 'Building server image version ${env.VERSION_STRING}...'
-            sh './buildserver.sh ${env.VERSION_STRING}'
+            echo 'Building server image version $VERSION_STRING...'
+            sh './buildserver.sh $VERSION_STRING'
             echo 'Building client image'
             sh './buildclient.sh'
          }
@@ -21,7 +21,7 @@ pipeline
             echo 'Testing: Starting echo service'
             dir("scripts")
             {
-                sh 'timeout 15s ./runserver.sh ${env.VERSION_STRING}&'
+                sh 'timeout 15s ./runserver.sh $VERSION_STRING&'
                 sh 'sleep 5'
                 sh './runclient.sh -l'
             }
@@ -31,7 +31,7 @@ pipeline
     stage('pushdockerhub') {
         steps {
             echo 'Pushing to docker hub repository...'
-            sh 'docker push sebmarc/echoserver:${env.VERSION_STRING}'
+            sh 'docker push sebmarc/echoserver:$VERSION_STRING'
             sh 'docker push sebmarc/echoclient:latest'
         }
     }
@@ -40,7 +40,7 @@ pipeline
             echo 'Deploying to aks cluster...'
             dir('scripts/jenkins')
             {
-                sh './update_cluster.sh ${env.VERSION_STRING} ${VERSION_STRING}_build:${BUILD_NUMBER}'
+                sh './update_cluster.sh $VERSION_STRING $VERSION_STRING-build:$BUILD_NUMBER'
             }
         }
     }
