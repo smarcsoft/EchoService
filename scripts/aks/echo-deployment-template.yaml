@@ -28,14 +28,14 @@ spec:
   template:
     metadata:
       annotations:
-        kubernetes.io/change-cause: "Update to $(ECHO_VERSION)"
+        kubernetes.io/change-cause: "Build {BUILD_VERSION}"
         linkerd.io/inject: enabled
       creationTimestamp: null
       labels:
         app: echoserver
     spec:
       containers:
-      - image: sebmarc/echoserver:$(ECHO_VERSION)
+      - image: sebmarc/echoserver:{ECHO_VERSION}
         imagePullPolicy: Always
         name: echoservice
         ports:
