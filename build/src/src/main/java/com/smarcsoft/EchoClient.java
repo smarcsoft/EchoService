@@ -92,10 +92,12 @@ public class EchoClient {
   public static void main(String[] args) throws Exception {
     String user = "world";
     int secs = 30;
+    int batch_size = 1;
     // Access a service running on the local machine on port 50051
     String target = "localhost:50051";
 
     int op =OP_ECHO;
+
     // Allow passing in the user and target strings as command line arguments
     if (args.length > 0) {
       if ("--help".equals(args[0])) {
@@ -118,6 +120,11 @@ public class EchoClient {
         op = OP_CPU;
         if(args.length >1)
           secs=Integer.parseInt(args[1]);
+      } else
+      if("batch".equals(args[0]))
+      {
+        if(args.length >1)
+          batch_size=Integer.parseInt(args[1]);
       } else 
       {
         printhelp(user, secs, target);
@@ -137,17 +144,24 @@ public class EchoClient {
         .build();
     try {
       EchoClient client = new EchoClient(channel);
-      switch(op)
-      {
-        case OP_ECHO:
-          client.greet(user);
-        break;
-        case OP_CPU:
-          client.cpu(secs);
-        break;
-        case OP_CPUJOB:
-        client.cpuJob(secs);
-      }
+      for(int i=0;i< batch_size;i++)
+        switch(op)
+        {
+          case OP_ECHO:
+            logger.log(Level.INFO, "Greeting {0} time",i);
+            client.greet(user);
+          break;
+          case OP_CPU:
+            logger.log(Level.INFO, "Greeting CPU for {0} second {1} time",new Object[]{secs, i});
+            client.cpu(secs);
+          break;
+          case OP_CPUJOB:
+            logger.log(Level.INFO, "Launching CPU job for {0} second {1} time", new Object[]{secs, i});
+            client.cpuJob(secs);
+            break;
+          default:
+              logger.log(Level.SEVERE, "Operation {0} handled", op);
+        }
     } finally {
       // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
       // resources the channel should be shut down when it will no longer be used. If it may be used
@@ -157,7 +171,7 @@ public class EchoClient {
   }
 
   private static void printhelp(String user, int secs, String target) {
-    System.err.println("Usage: [echo | cpu ] [args] ");
+    System.err.println("Usage: [echo | cpu ] [args] [batch [batch_size]]");
     System.err.println("");
     System.err.println("  echo    [name target]. Defaults to " + user);
     System.err.println("  cpu     [secs target]. Number of seconds on which the cpu will be pegged. Default to " + secs +" seconds");

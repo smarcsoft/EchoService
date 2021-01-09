@@ -10,12 +10,12 @@ If a new image can be successfully build, push it to docker hub, and deploy it i
 4. Call a script
 Create a shell script taking a number of seconds as an argument and doing an infinite loop until the number of seconds is reached. - DONE
 The script should output the number of iterations executed. - DONE
-Add a maximizecpu function in the echo service
-maximizecpu should call the script and return the number of iterations to the client.
+Add a maximizecpu function in the echo service - DONE
+maximizecpu should call the script and return the number of iterations to the client. - DONE
 
 4. autoscaling
-Using Azure Monitor, look at the script pod cpu.
-Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%.
+Using Azure Monitor, look at the script pod cpu. - DONE
+Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%. - DONE
 
 5. Service Mesh
 Investigate service mesh on Azure.
