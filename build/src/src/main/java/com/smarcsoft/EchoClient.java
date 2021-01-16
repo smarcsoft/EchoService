@@ -100,7 +100,7 @@ public class EchoClient {
 
     int arg_number = args.length;
     int arg_current = 0;
-    logger.log(Level.INFO,"Processing arguments...");
+//    logger.log(Level.INFO,"Processing arguments...");
     while (arg_number >0)
     {
       // Allow passing in the user and target strings as command line arguments
@@ -111,26 +111,26 @@ public class EchoClient {
       if("echo".equals(args[arg_current]))
       {
         arg_number--; op = OP_ECHO;arg_current++;
-        logger.log(Level.INFO, "Echo...");
-        if(arg_number >1) { user=args[arg_current]; arg_current++;arg_number--; logger.log(Level.INFO, "on {0}...", user); } else {printhelp(user, secs, target);System.exit(1); }
+//        logger.log(Level.INFO, "Echo...");
+        if(arg_number >1) { user=args[arg_current]; arg_current++;arg_number--; logger.log(Level.INFO, "Echo on {0}...", user); } else {printhelp(user, secs, target);System.exit(1); }
       }
       if("cpujob".equals(args[arg_current]))
       {
-        logger.log(Level.INFO, "CPUJOB...");
+        //       logger.log(Level.INFO, "CPUJOB...");
         arg_number--; arg_current++; op = OP_CPUJOB;
-        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]); arg_number--; logger.log(Level.INFO, "For {0} seconds.", secs);arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
+        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]); arg_number--; logger.log(Level.INFO, "CPU job for {0} seconds.", secs);arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
       } else 
       if("cpu".equals(args[arg_current]))
       {
-        logger.log(Level.INFO, "CPU...");
+//        logger.log(Level.INFO, "CPU...");
         arg_number--; op = OP_CPU;arg_current++;
-        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "For {o} seconds", secs);} else {printhelp(user, secs, target);System.exit(1); }
+        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "CPU for {0} seconds", secs);} else {printhelp(user, secs, target);System.exit(1); }
       } else
       if("batch".equals(args[arg_current]))
       {
-        logger.log(Level.INFO, "Batched for ...");
+//        logger.log(Level.INFO, "Batched for ...");
         arg_number--; arg_current++;
-        if(arg_number >1) { batch_size=Integer.parseInt(args[arg_current]);arg_number--;logger.log(Level.INFO, "{0} jobs...", batch_size); } else {printhelp(user, secs, target);System.exit(1); }
+        if(arg_number >1) { batch_size=Integer.parseInt(args[arg_current]);arg_number--;logger.log(Level.INFO, "Batched for {0} jobs...", batch_size); } else {printhelp(user, secs, target);System.exit(1); }
       } 
       if(arg_number == 1) {target=args[args.length-1];arg_number--;logger.log(Level.INFO, "On service {0}...", target);}
     }
@@ -149,19 +149,19 @@ public class EchoClient {
         switch(op)
         {
           case OP_ECHO:
-            logger.log(Level.INFO, "Greeting {0} time",i);
+            logger.log(Level.INFO, "Greeting {0}/{1} time",new Object[]{i, batch_size});
             client.greet(user);
           break;
           case OP_CPU:
-            logger.log(Level.INFO, "Greeting CPU for {0} second {1} time",new Object[]{secs, i});
+            logger.log(Level.INFO, "Greeting CPU for {0} seconds {1}/{2} time(s)",new Object[]{secs, i, batch_size});
             client.cpu(secs);
           break;
           case OP_CPUJOB:
-            logger.log(Level.INFO, "Launching CPU job for {0} second {1} time", new Object[]{secs, i});
+            logger.log(Level.INFO, "Launching CPU job for {0} second {1}/{2} time(s)", new Object[]{secs, i, batch_size});
             client.cpuJob(secs);
-            break;
+          break;
           default:
-              logger.log(Level.SEVERE, "Operation {0} handled", op);
+              logger.log(Level.SEVERE, "Operation {0} unknown", op);
         }
     } finally {
       // ManagedChannels use resources like threads and TCP connections. To prevent leaking these

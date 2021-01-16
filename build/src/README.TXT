@@ -5,8 +5,8 @@ The next evolution of this service will be the creation of a service mesh on Azu
 
 To compile:
 -----------
-mvn -DECHO_VERSION=<version> package
+mvn package
 
-To build the docker containers go to the ../docker directory
+To build the docker containers go to the ../../docker directory
 
 Seb.

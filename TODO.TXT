@@ -19,3 +19,7 @@ Then use the autoscaling capability of kubernetes to create a new pod if cpu > 8
 
 5. Service Mesh
 Investigate service mesh on Azure.
+. Use linkerd for retry management (simulate a faulty service and monitor the retries)
+. Make sure load balancing works across all pods
+. Simulate a canary deployment with a faulty service.
+
