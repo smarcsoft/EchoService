@@ -39,15 +39,22 @@ import com.google.protobuf.Empty;
 public class EchoServer {
   private static final Logger logger = Logger.getLogger(EchoServer.class.getName());
 
-  public static final String VERSION = System.getProperty("ECHO_VERSION");
+  public String version = null;
 
   private Server server;
+
+  synchronized String getVersion()
+  {
+    if(version == null)
+      version = System.getProperty("ECHO_VERSION");
+    return version;
+  }
 
   private void start() throws IOException {
     /* The port on which the server should run */
     int port = 50051;
-    server = ServerBuilder.forPort(port).addService(new EchoImpl()).build().start();
-    logger.log(Level.INFO, "Server {0} started, listening on {1}", new Object[]{VERSION, port});
+    server = ServerBuilder.forPort(port).addService(new EchoImpl(this)).build().start();
+    logger.log(Level.INFO, "Server {0} started, listening on {1}", new Object[]{getVersion(), port});
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -91,7 +98,12 @@ public class EchoServer {
   }
 
   static class EchoImpl extends EchoGrpc.EchoImplBase {
-
+  private EchoServer server;
+  
+  EchoImpl(EchoServer server)
+    {
+      this.server = server;
+    }
     @Override
     public void say(Request request, StreamObserver<Reply> responseObserver) {
       logger.log(Level.INFO, "Service request {0}", request.getName());
@@ -108,14 +120,14 @@ public class EchoServer {
 
     @Override
     public void version(Empty request, StreamObserver<Reply> responseObserver) {
-      Reply reply = Reply.newBuilder().setMessage("Version " + VERSION).build();
+      Reply reply = Reply.newBuilder().setMessage("Version " + server.getVersion()).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
 
     @Override
     public void cpuJob(Seconds request, StreamObserver<Iterations> responseObserver) {
-      logger.log(Level.INFO, "cpuJob invoked (version {0})", VERSION);
+      logger.log(Level.INFO, "cpuJob invoked (version {0})", server.getVersion());
           int secs = request.getSecs();
           logger.log(Level.INFO, "asked to run cpuJob for {0} seconds", secs);
           int r = new Random().nextInt(500);
@@ -178,7 +190,7 @@ public class EchoServer {
     @Override
     public void cpu(com.smarcsoft.Seconds request,
         io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
-          logger.log(Level.INFO, "cpu invoked (version {0})", VERSION);
+          logger.log(Level.INFO, "cpu invoked (version {0})", server.getVersion());
 
           long start_time = System.currentTimeMillis();
           long end_time = start_time+request.getSecs() * 1000;
