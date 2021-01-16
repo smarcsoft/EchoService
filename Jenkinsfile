@@ -2,7 +2,7 @@ pipeline
 {
   agent any
   environment { 
-        VERSION_STRING = 'v2.1.2'
+        VERSION_STRING = 'v2.1.3'
     }
   stages {
 	stage('build') {
