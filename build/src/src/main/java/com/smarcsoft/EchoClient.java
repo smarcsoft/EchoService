@@ -16,10 +16,11 @@ package com.smarcsoft;
  * limitations under the License.
  */
 import io.grpc.Channel;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.TimeUnit;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,9 +31,9 @@ import javax.lang.model.util.ElementScanner6;
  */
 public class EchoClient {
   private static final Logger logger = Logger.getLogger(EchoClient.class.getName());
-  private static final int OP_ECHO = 0;
-  private static final int OP_CPU = 1;
-  private static final int OP_CPUJOB = 2;
+  protected static final int OP_ECHO = 0;
+  protected static final int OP_CPU = 1;
+  protected static final int OP_CPUJOB = 2;
 
   private final EchoGrpc.EchoBlockingStub blockingStub;
 
@@ -93,6 +94,7 @@ public class EchoClient {
     String user = "world";
     int secs = 30;
     int batch_size = 1;
+    int thread_number = 1;
     // Access a service running on the local machine on port 50051
     String target = "localhost:50051";
 
@@ -126,6 +128,12 @@ public class EchoClient {
         arg_number--; op = OP_CPU;arg_current++;
         if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "CPU for {0} seconds", secs);arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
       } else
+      if("thread".equals(args[arg_current]))
+      {
+//        logger.log(Level.INFO, "CPU...");
+        arg_number--; arg_current++;
+        if(arg_number >1) { thread_number=Integer.parseInt(args[arg_current]);arg_number--;arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
+      } else
       if("batch".equals(args[arg_current]))
       {
 //        logger.log(Level.INFO, "Batched for ...");
@@ -134,45 +142,15 @@ public class EchoClient {
       } 
       if(arg_number == 1) {target=args[args.length-1];arg_number--;logger.log(Level.INFO, "On service {0}...", target);}
     }
-   
-    // Create a communication channel to the server, known as a Channel. Channels are thread-safe
-    // and reusable. It is common to create channels at the beginning of your application and reuse
-    // them until the application shuts down.
-    ManagedChannel channel = ManagedChannelBuilder.forTarget(target)
-        // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid
-        // needing certificates.
-        .usePlaintext()
-        .build();
-    try {
-      EchoClient client = new EchoClient(channel);
-      for(int i=0;i< batch_size;i++)
-        switch(op)
-        {
-          case OP_ECHO:
-            logger.log(Level.INFO, "Greeting {0}/{1} time",new Object[]{i, batch_size});
-            client.greet(user);
-          break;
-          case OP_CPU:
-            logger.log(Level.INFO, "Greeting CPU for {0} seconds {1}/{2} time(s)",new Object[]{secs, i, batch_size});
-            client.cpu(secs);
-          break;
-          case OP_CPUJOB:
-            logger.log(Level.INFO, "Launching CPU job for {0} second {1}/{2} time(s)", new Object[]{secs, i, batch_size});
-            client.cpuJob(secs);
-          break;
-          default:
-              logger.log(Level.SEVERE, "Operation {0} unknown", op);
-        }
-    } finally {
-      // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
-      // resources the channel should be shut down when it will no longer be used. If it may be used
-      // again leave it running.
-      channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
-    }
+
+    ExecutorService es = Executors.newFixedThreadPool(thread_number);
+    for(int i=0; i< thread_number; i++)
+      es.submit(new EchoClientThread(batch_size, op, user, secs, target));
+    es.shutdown();
   }
 
   private static void printhelp(String user, int secs, String target) {
-    System.err.println("Usage: [echo | cpu ] [args] [batch [batch_size]]");
+    System.err.println("Usage: [echo | cpu ] [args] [batch [batch_size] [thread [number_of_threads]]]");
     System.err.println("");
     System.err.println("  echo    [name target]. Defaults to " + user);
     System.err.println("  cpu     [secs target]. Number of seconds on which the cpu will be pegged. Default to " + secs +" seconds");
