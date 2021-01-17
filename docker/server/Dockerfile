@@ -17,6 +17,6 @@ RUN mv ./kubectl /usr/local/bin/kubectl
 RUN mkdir /root/.kube
 COPY config /root/.kube
 
-ENTRYPOINT [ "java", "-Djava.util.logging.config.file=/app/logging.properties -DECHO_VERSION=${VERSION}", "-jar", "/app/echo-1.1.0-jar-with-dependencies.jar"]
+ENTRYPOINT [ "java", "-Djava.util.logging.config.file=/app/logging.properties", "-DECHO_VERSION=${VERSION}", "-jar", "/app/echo-1.1.0-jar-with-dependencies.jar"]
 VOLUME /home/docker_volume/logs
 EXPOSE 50051
