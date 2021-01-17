@@ -124,13 +124,13 @@ public class EchoClient {
       {
 //        logger.log(Level.INFO, "CPU...");
         arg_number--; op = OP_CPU;arg_current++;
-        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "CPU for {0} seconds", secs);} else {printhelp(user, secs, target);System.exit(1); }
+        if(arg_number >1) { secs=Integer.parseInt(args[arg_current]);arg_number--; logger.log(Level.INFO, "CPU for {0} seconds", secs);arg_current++;} else {printhelp(user, secs, target);System.exit(1); }
       } else
       if("batch".equals(args[arg_current]))
       {
 //        logger.log(Level.INFO, "Batched for ...");
         arg_number--; arg_current++;
-        if(arg_number >1) { batch_size=Integer.parseInt(args[arg_current]);arg_number--;logger.log(Level.INFO, "Batched for {0} jobs...", batch_size); } else {printhelp(user, secs, target);System.exit(1); }
+        if(arg_number >1) { batch_size=Integer.parseInt(args[arg_current]);arg_number--;logger.log(Level.INFO, "Batched for {0} jobs...", batch_size);arg_current++; } else {printhelp(user, secs, target);System.exit(1); }
       } 
       if(arg_number == 1) {target=args[args.length-1];arg_number--;logger.log(Level.INFO, "On service {0}...", target);}
     }
