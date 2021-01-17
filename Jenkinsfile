@@ -12,7 +12,7 @@ pipeline
             echo 'Building server image version $VERSION_STRING...'
             sh './buildserver.sh $VERSION_STRING'
             echo 'Building client image'
-            sh './buildclient.sh'
+            sh './buildclient.sh $VERSION_STRING'
          }
       }
     }
