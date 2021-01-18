@@ -192,6 +192,8 @@ public class EchoServer {
         io.grpc.stub.StreamObserver<com.smarcsoft.Iterations> responseObserver) {
           logger.log(Level.INFO, "cpu invoked (version {0})", server.getVersion());
 
+          introduceFault();
+
           long start_time = System.currentTimeMillis();
           long end_time = start_time+request.getSecs() * 1000;
           long current_time = start_time;
@@ -207,6 +209,11 @@ public class EchoServer {
           responseObserver.onNext(reply);
           logger.log(Level.INFO, "kubectly invocation end.");
           responseObserver.onCompleted();
+        }
+
+        private void introduceFault() {
+          if (new Random().nextInt(10)==5)
+            throw new RuntimeException("Failure!");
         }
   }
 }

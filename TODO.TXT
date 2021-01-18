@@ -18,7 +18,6 @@ Using Azure Monitor, look at the script pod cpu. - DONE
 Then use the autoscaling capability of kubernetes to create a new pod if cpu > 80%. - DONE
 
 5. Service Mesh
-Before i start, version is not working... I don't know why the system property cannot be read.
 Investigate service mesh on Azure.
 . Use linkerd for retry management (simulate a faulty service and monitor the retries)
 . Make sure load balancing works across all pods
