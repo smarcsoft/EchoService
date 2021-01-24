@@ -22,4 +22,6 @@ Investigate service mesh on Azure.
 . Use linkerd for retry management (simulate a faulty service and monitor the retries)
 . Make sure load balancing works across all pods
 . Simulate a canary deployment with a faulty service.
+NOTE: I think Flagger is not working because i need to instrument the grpc service with promotheus.
+See https://github.com/grpc-ecosystem/java-grpc-prometheus
 

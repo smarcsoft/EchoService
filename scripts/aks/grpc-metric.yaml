@@ -1,0 +1,27 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: grpc-error-rate-percentage
+spec:
+  provider:
+    type: prometheus
+    address: http://flagger-prometheus.flagger-system:9090
+  query: |
+    100 - sum(
+        rate(
+            grpc_server_handled_total{
+              grpc_code!="OK",
+              kubernetes_namespace="{{ namespace }}",
+              kubernetes_pod_name=~"{{ target }}-[0-9a-zA-Z]+(-[0-9a-zA-Z]+)"
+            }[{{ interval }}]
+        )
+    )
+    /
+    sum(
+        rate(
+            grpc_server_started_total{
+              kubernetes_namespace="{{ namespace }}",
+              kubernetes_pod_name=~"{{ target }}-[0-9a-zA-Z]+(-[0-9a-zA-Z]+)"
+            }[{{ interval }}]
+        )
+    ) * 100

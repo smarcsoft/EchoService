@@ -1,0 +1,37 @@
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: echoservercanary
+  annotations:
+    linkerd.io/inject: enabled
+spec:
+  # deployment reference
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: echoserver
+  # the maximum time in seconds for the canary deployment
+  # to make progress before it is rollback (default 600s)
+  progressDeadlineSeconds: 600
+  service:
+    # ClusterIP port number
+    port: 50051
+  analysis:
+    # schedule interval (default 60s)
+    interval: 30s
+    # max number of failed metric checks before rollback
+    threshold: 5
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 50
+    # canary increment step
+    # percentage (0-100)
+    stepWeight: 5
+    # Linkerd Prometheus checks
+    metrics:
+    - name: grpc-error-rate-percentage
+      # minimum req success rate (non 5xx responses)
+      # percentage (0-100)
+      thresholdRange:
+        max: 0.5
+      interval: 1m

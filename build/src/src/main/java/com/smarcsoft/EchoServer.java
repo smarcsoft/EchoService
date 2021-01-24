@@ -211,9 +211,9 @@ public class EchoServer {
           responseObserver.onCompleted();
         }
 
-        private void introduceFault() {
-          if (new Random().nextInt(10)==5)
-            throw new RuntimeException("Failure!");
-        }
+    private void introduceFault() {
+      if (new Random().nextInt(10)==5)
+        throw new RuntimeException("Failure!");
+    }
   }
 }
